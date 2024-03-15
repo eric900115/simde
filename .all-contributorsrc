@@ -706,6 +706,34 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "Coeur",
+      "name": "Cœur",
+      "avatar_url": "https://avatars.githubusercontent.com/u/839992?v=4",
+      "profile": "https://github.com/Coeur",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Proudsalsa",
+      "name": "Florian @Proudsalsa",
+      "avatar_url": "https://avatars.githubusercontent.com/u/103449548?v=4",
+      "profile": "https://github.com/Proudsalsa",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "thomas-schlichter",
+      "name": "Thomas Schlichter",
+      "avatar_url": "https://avatars.githubusercontent.com/u/106664923?v=4",
+      "profile": "https://github.com/thomas-schlichter",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7
