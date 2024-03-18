@@ -131,7 +131,7 @@ simde_vqmovun_s32(simde_int32x4_t a) {
           __riscv_vmax_vx_i32m1(a_.sv128, 0, 4)
           ), 0, 0, 4));
 
-    return r_;
+    return simde_uint16x4_from_private(r_);
   #elif SIMDE_NATURAL_VECTOR_SIZE > 0
     return simde_vmovn_u32(simde_vreinterpretq_u32_s32(simde_vmaxq_s32(simde_vdupq_n_s32(0), simde_vminq_s32(simde_vdupq_n_s32(UINT16_MAX), a))));
   #else
@@ -166,7 +166,7 @@ simde_vqmovun_s64(simde_int64x2_t a) {
           __riscv_vmax_vx_i64m1(a_.sv128, 0, 2)
           ), 0, 0, 2));
 
-    return r_;
+    return simde_uint32x2_from_private(r_);
   #elif SIMDE_NATURAL_VECTOR_SIZE > 0
     return simde_vmovn_u64(simde_vreinterpretq_u64_s64(simde_x_vmaxq_s64(simde_vdupq_n_s64(0), simde_x_vminq_s64(simde_vdupq_n_s64(UINT32_MAX), a))));
   #else
