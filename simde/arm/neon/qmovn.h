@@ -199,7 +199,6 @@ simde_vqmovn_s64(simde_int64x2_t a) {
 
     r_.sv64 = __riscv_vlmul_ext_v_i32mf2_i32m1(
       __riscv_vnclip_wx_i32mf2(a_.sv128, 0, 0, 2));
-    simde_memcpy(&r, &r_, sizeof(simde_int32x2_t));
 
     return simde_int32x2_from_private(r_);
   #elif SIMDE_NATURAL_VECTOR_SIZE > 0
@@ -232,7 +231,6 @@ simde_vqmovn_u16(simde_uint16x8_t a) {
 
     r_.sv64 = __riscv_vlmul_ext_v_u8mf2_u8m1(
       __riscv_vnclipu_wx_u8mf2(a_.sv128, 0, 0, 8));
-    simde_memcpy(&r, &r_, sizeof(simde_uint8x8_t));
 
     return simde_uint8x8_from_private(r_);
   #elif SIMDE_NATURAL_VECTOR_SIZE > 0
