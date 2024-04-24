@@ -40,7 +40,7 @@ SIMDE_BEGIN_DECLS_
 SIMDE_FUNCTION_ATTRIBUTES
 simde_int32x4_t
 simde_vcvtnq_s32_f32(simde_float32x4_t a) {
-  #if defined(SIMDE_ARM_NEON_A32V8_NATIVE)
+  #if defined(SIMDE_ARM_NEON_A64V8_NATIVE)
     return vcvtnq_s32_f32(a);
   #else
     simde_float32x4_private a_ = simde_float32x4_to_private(a);
@@ -65,7 +65,7 @@ simde_vcvtnq_s32_f32(simde_float32x4_t a) {
     return simde_int32x4_from_private(r_);
   #endif
 }
-#if defined(SIMDE_ARM_NEON_A32V8_ENABLE_NATIVE_ALIASES)
+#if defined(SIMDE_ARM_NEON_A64V8_ENABLE_NATIVE_ALIASES)
   #undef vcvtnq_s32_f32
   #define vcvtnq_s32_f32(a) simde_vcvtnq_s32_f32(a)
 #endif
@@ -153,6 +153,8 @@ simde_vcvtnh_s32_f16(simde_float16_t a) {
   #define vcvtnh_s32_f16(a) simde_vcvtnh_s32_f16(a)
 #endif
 
+/* Disabled until we fix the FCVTZS/FCVTMS/FCVTPS/FCVTNS family intrinsics
+ * https://github.com/simd-everywhere/simde/issues/1099
 SIMDE_FUNCTION_ATTRIBUTES
 int16_t
 simde_vcvtnh_s16_f16(simde_float16_t a) {
@@ -177,6 +179,7 @@ simde_vcvtnh_s16_f16(simde_float16_t a) {
   #undef vcvtnh_s16_f16
   #define vcvtnh_s16_f16(a) simde_vcvtnh_s16_f16(a)
 #endif
+*/
 
 SIMDE_FUNCTION_ATTRIBUTES
 uint64_t
@@ -304,7 +307,7 @@ simde_vcvtns_u32_f32(simde_float32 a) {
 SIMDE_FUNCTION_ATTRIBUTES
 simde_uint32x4_t
 simde_vcvtnq_u32_f32(simde_float32x4_t a) {
-  #if defined(SIMDE_ARM_NEON_A32V8_NATIVE) && !defined(SIMDE_BUG_CLANG_46844)
+  #if defined(SIMDE_ARM_NEON_A64V8_NATIVE) && !defined(SIMDE_BUG_CLANG_46844)
     return vcvtnq_u32_f32(a);
   #else
     simde_float32x4_private a_ = simde_float32x4_to_private(a);
@@ -330,7 +333,7 @@ simde_vcvtnq_u32_f32(simde_float32x4_t a) {
     return simde_uint32x4_from_private(r_);
   #endif
 }
-#if defined(SIMDE_ARM_NEON_A32V7_ENABLE_NATIVE_ALIASES)
+#if defined(SIMDE_ARM_NEON_A64V8_ENABLE_NATIVE_ALIASES)
   #undef vcvtnq_u32_f32
   #define vcvtnq_u32_f32(a) simde_vcvtnq_u32_f32(a)
 #endif
@@ -417,6 +420,8 @@ simde_vcvtnq_u64_f64(simde_float64x2_t a) {
   #define vcvtnq_u64_f64(a) simde_vcvtnq_u64_f64(a)
 #endif
 
+/* Disabled until we fix the FCVTZS/FCVTMS/FCVTPS/FCVTNS family intrinsics
+ * https://github.com/simd-everywhere/simde/issues/1099
 SIMDE_FUNCTION_ATTRIBUTES
 simde_int16x8_t
 simde_vcvtnq_s16_f16(simde_float16x8_t a) {
@@ -460,6 +465,7 @@ simde_vcvtn_s16_f16(simde_float16x4_t a) {
   #undef vcvtn_s16_f16
   #define vcvtn_s16_f16(a) simde_vcvtn_s16_f16(a)
 #endif
+*/
 
 SIMDE_FUNCTION_ATTRIBUTES
 simde_uint16x8_t
@@ -508,7 +514,7 @@ simde_vcvtn_u16_f16(simde_float16x4_t a) {
 SIMDE_FUNCTION_ATTRIBUTES
 simde_uint32x2_t
 simde_vcvtn_u32_f32(simde_float32x2_t a) {
-  #if defined(SIMDE_ARM_NEON_A32V8_NATIVE)
+  #if defined(SIMDE_ARM_NEON_A64V8_NATIVE)
     return vcvtn_u32_f32(a);
   #else
     simde_float32x2_private a_ = simde_float32x2_to_private(a);
@@ -522,7 +528,7 @@ simde_vcvtn_u32_f32(simde_float32x2_t a) {
     return simde_uint32x2_from_private(r_);
   #endif
 }
-#if defined(SIMDE_ARM_NEON_A32V8_ENABLE_NATIVE_ALIASES)
+#if defined(SIMDE_ARM_NEON_A64V8_ENABLE_NATIVE_ALIASES)
   #undef vcvtn_u32_f32
   #define vcvtn_u32_f32(a) simde_vcvtn_u32_f32(a)
 #endif
@@ -530,7 +536,7 @@ simde_vcvtn_u32_f32(simde_float32x2_t a) {
 SIMDE_FUNCTION_ATTRIBUTES
 simde_int32x2_t
 simde_vcvtn_s32_f32(simde_float32x2_t a) {
-  #if defined(SIMDE_ARM_NEON_A32V8_NATIVE)
+  #if defined(SIMDE_ARM_NEON_A64V8_NATIVE)
     return vcvtn_s32_f32(a);
   #else
     simde_float32x2_private a_ = simde_float32x2_to_private(a);
@@ -544,7 +550,7 @@ simde_vcvtn_s32_f32(simde_float32x2_t a) {
     return simde_int32x2_from_private(r_);
   #endif
 }
-#if defined(SIMDE_ARM_NEON_A32V8_ENABLE_NATIVE_ALIASES)
+#if defined(SIMDE_ARM_NEON_A64V8_ENABLE_NATIVE_ALIASES)
   #undef vcvtn_s32_f32
   #define vcvtn_s32_f32(a) simde_vcvtn_s32_f32(a)
 #endif

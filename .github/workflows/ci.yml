@@ -5,6 +5,7 @@ on:
     branches-ignore:
       - 'ci/**'
       - '!ci/gha**'
+      - 'dependabot/**'
   pull_request:
     branches:
       - 'master'
@@ -140,9 +141,56 @@ jobs:
     - name: Coverage Report
       run: ninja -C build -v coverage-xml
     - name: CodeCov.io
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       with:
         file: ./build/meson-logs/coverage.xml
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  x86-xop:
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+    env:
+      CFLAGS: -Wall -Wextra -Werror -march=bdver2
+      CXXFLAGS: -Wall -Wextra -Werror -march=bdver2
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+    - name: CPU Information
+      run: cat /proc/cpuinfo
+    - name: ccache
+      uses: hendrikmuhs/ccache-action@v1.2
+      with:
+        key: ${{ github.job }}-
+    - name: Install APT Dependencies
+      run: |
+        #sudo add-apt-repository ppa:aschultz/backports
+        sudo apt-get update
+        sudo apt-get install -y ninja-build ninja-build python3-pip parallel gcovr g++-12 gcc-12 qemu-user-static
+        sudo apt-get purge -y gcc g++
+        sudo ln -s /usr/bin/gcc-12 /usr/bin/gcc
+        sudo ln -s /usr/bin/g++-12 /usr/bin/g++
+        sudo python3 -m pip install meson==0.55.0
+    - name: add ccache to the build path
+      run: |
+        export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
+    - name: Configure
+      run: meson setup build -Db_coverage=true || (cat build/meson-logs/meson-log.txt ; false)
+    - name: Build
+      run: ninja -C build -v
+    # can't test until we find a combination of `gcc -march=` and `qemu -cpu` that both enable XOP and allows qemu to test it
+    # - name: Test
+    #   run: meson test -C build --print-errorlogs --wrapper "qemu-amd64-static -cpu Opteron_G5-v1"
+    # - name: Coverage Report
+    #   run: ninja -C build -v coverage-xml
+    # - name: CodeCov.io
+    #   uses: codecov/codecov-action@v4
+    #   with:
+    #     file: ./build/meson-logs/coverage.xml
+    #   env:
+    #     CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   emscripten:
     runs-on: ubuntu-22.04
@@ -213,9 +261,11 @@ jobs:
     - name: Coverage Report
       run: ninja -C build -v coverage-xml
     - name: CodeCov.io
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       with:
         file: ./build/meson-logs/coverage.xml
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   sleef:
     runs-on: ubuntu-22.04
@@ -242,9 +292,11 @@ jobs:
     - name: Coverage Report
       run: ninja -C build -v coverage-xml
     - name: CodeCov.io
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       with:
         file: ./build/meson-logs/coverage.xml
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   gcc:
     strategy:
@@ -337,6 +389,13 @@ jobs:
           cross: aarch64
           arch_gnu: aarch64
           arch_deb: arm64
+          distro: ubuntu-22.04
+        - extra: -32bit
+          version: 12
+          cross: armv8
+          arch_gnu: arm
+          arch_gnu_abi: eabihf
+          arch_deb: armhf
           distro: ubuntu-22.04
         - version: 12
           cross: riscv64
@@ -439,7 +498,7 @@ jobs:
     - name: Install git
       run: |
         apt-get install -y git
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
     - name: CPU Information
@@ -657,25 +716,45 @@ jobs:
         # https://github.com/actions/runner-images/blob/main/images/macos/macos-11-Readme.md#xcode
         # https://github.com/actions/runner-images/blob/main/images/macos/macos-12-Readme.md#xcode
         # https://github.com/actions/runner-images/blob/main/images/macos/macos-13-Readme.md#xcode
+        # https://github.com/actions/runner-images/blob/main/images/macos/macos-14-arm64-Readme.md
         # https://trac.macports.org/wiki/XcodeVersionInfo
         include:
           - xcode: "11.7"
             os: macos-11
+            arch_flags: -Wno-complex-component-init
           - xcode: "12.4"
             os: macos-11
+            arch_flags: -Wno-poison-system-directories  # due to meson test
           - xcode: "12.5.1"
             os: macos-11
+            arch_flags: -Wno-poison-system-directories  # due to meson test
           - xcode: "13.1"
             os: macos-12
+            arch_flags: -Wno-poison-system-directories  # due to meson test
           - xcode: "13.3.1"
             os: macos-12
+            arch_flags: -Wno-poison-system-directories  # due to meson test
           - xcode: "13.4.1"
             os: macos-12
+            arch_flags: -Wno-poison-system-directories  # due to meson test
           - xcode: "14.2"
             os: macos-13
+            arch_flags: -Wno-poison-system-directories  # due to meson test
+          - xcode: "14.3.1"
+            os: macos-14  # arm64
+            arch_flags: -march=native -Wno-poison-system-directories
+              # "-Wno-poison-system-directories": due to meson test
+              # "-march=native": without, or with -mcpu=apple-m1 then unavailable __ARM_FEATURE_s get enabled
+          - xcode: "15.2"
+            os: macos-14  # arm64
+            arch_flags: -march=native -Wno-poison-system-directories
+              # "-Wno-poison-system-directories": due to meson test
+              # "-march=native": without, or with -mcpu=apple-m1 then unavailable __ARM_FEATURE_s get enabled
     runs-on: ${{ matrix.os }}
     env:
       DEVELOPER_DIR:  /Applications/Xcode_${{ matrix.xcode }}.app
+      CFLAGS: ${{ matrix.arch_flags }} -Wall -Weverything -Werror -Wno-complex-component-init
+      CXXFLAGS: ${{ matrix.arch_flags }} -Wall -Weverything -Werror -Wno-complex-component-init
     steps:
     - uses: actions/checkout@v4
       with:
@@ -695,7 +774,7 @@ jobs:
     - name: Install Homebrew Dependencies
       run: brew install meson ninja # gcovr
     - name: Configure
-      run: meson setup build # -Db_coverage=true
+      run: meson setup build || (cat build/meson-logs/meson-log.txt ; false) # -Db_coverage=true
     - name: Build
       run: ninja -C build -v
     - name: Test
@@ -703,9 +782,11 @@ jobs:
     # - name: Coverage Report
     #   run: ninja -C build -v coverage-xml
     # - name: CodeCov.io
-    #   uses: codecov/codecov-action@v3
+    #   uses: codecov/codecov-action@v4
     #   with:
     #     file: ./build/meson-logs/coverage.xml
+    #   env:
+    #     CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   icc:
     runs-on: ubuntu-22.04

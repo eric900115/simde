@@ -74,18 +74,24 @@ set extensions:
   * [SSE3](https://en.wikipedia.org/wiki/SSE3) [List](https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#ssetechs=SSE3)
   * [SSSE3](https://en.wikipedia.org/wiki/SSSE3) [List](https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#ssetechs=SSSE3)
   * [SSE4.1](https://en.wikipedia.org/wiki/SSE4#SSE4.1) [List](https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#ssetechs=SSE4_1)
+  * [CRC32](https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#ig_expand=7131&othertechs=CRC32)
   * [AVX](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions) [List](https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#avxnewtechs=AVX)
   * [AVX2](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions#Advanced_Vector_Extensions_2) [List](https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#avxnewtechs=AVX2)
   * [F16C](https://en.wikipedia.org/wiki/F16C) [List](https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#avxnewtechs=F16C)
   * [FMA](https://en.wikipedia.org/wiki/FMA_instruction_set) [List](https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#avxnewtechs=FMA)
   * [GFNI](https://en.wikipedia.org/wiki/AVX-512#GFNI) [List](https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#othertechs=GFNI)
-  * [CLMUL](https://en.wikipedia.org/wiki/CLMUL_instruction_set) [List](https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#text=clmul&ig_expand=770&othertechs=PCLMULQDQ,VPCLMULQDQ)
   * [XOP](https://en.wikipedia.org/wiki/XOP_instruction_set)
   * [SVML](https://software.intel.com/content/www/us/en/develop/documentation/cpp-compiler-developer-guide-and-reference/top/compiler-reference/intrinsics/intrinsics-for-intel-advanced-vector-extensions-512-intel-avx-512-instructions/intrinsics-for-arithmetic-operations-1/intrinsics-for-short-vector-math-library-svml-operations.html) [List](https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#ig_expand=770&techs=SVML)
+  * [AVX512VPOPCNTDQ](https://en.wikipedia.org/wiki/AVX-512#VPOPCNTDQ_and_BITALG) [List](https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#ig_expand=7131&avx512techs=AVX512VPOPCNTDQ)
+  * [AVX512_BITALG](https://en.wikipedia.org/wiki/AVX-512#VPOPCNTDQ_and_BITALG) [List](https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#ig_expand=7131&avx512techs=AVX512_BITALG)
+  * [AVX512_VBMI](https://en.wikipedia.org/wiki/AVX-512#Permute) [List](https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#ig_expand=7131&avx512techs=AVX512_VBMI)
+  * [AVX512_VNNI](https://en.wikipedia.org/wiki/AVX-512#VNNI) [List](https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#ig_expand=7131&avx512techs=AVX512_VNNI)
+  * [AVX512_VP2INTERSECT](https://en.wikipedia.org/wiki/AVX-512#VP2INTERSECT) [List](https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#ig_expand=7131&avx512techs=AVX512_VP2INTERSECT)
+  * [VPCLMULQDQ](https://en.wikipedia.org/wiki/AVX-512#VPCLMULQDQ) [List](https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#othertechs=VPCLMULQDQ)
 * WebAssembly
   * [SIMD128](https://github.com/WebAssembly/simd)
 
-As well as partial support for many others, including NEON and SVE in
+As well as partial support for many others, including AES-ni, [CLMUL](https://en.wikipedia.org/wiki/CLMUL_instruction_set), SSE4.2, SVE, [MSA](https://en.wikipedia.org/wiki/MIPS_architecture#Application-specific_extensions) in
 addition to several AVX-512 extensions.  See the
 [instruction-set-support](https://github.com/simd-everywhere/simde/issues?q=is%3Aissue+is%3Aopen+label%3Ainstruction-set-support+sort%3Aupdated-desc)
 label in the issue tracker for details on progress.  If you'd like to
@@ -269,13 +275,17 @@ isn't an option then other CI platforms can be added.
 
 The following architectures are tested in CI for every commit:
 
- * x86_64
+ * x86_64/amd64
  * x86
  * AArch64
  * ARMv8
- * ARMv7
+ * ARMv7 with VFPv3-D16 floating point
+ * ARMv5 EABI
  * PPC64
- * MIPS Loongson
+ * z/Architecture (with "-mzvector")
+ * MIPS Loongson 64
+ * RISC-V 64
+ * emscripten 32- & 64-bit; regular and relaxed
 
 We would love to add more, so patches are extremely welcome!
 
@@ -311,6 +321,8 @@ We would love to add more, so patches are extremely welcome!
      SSE with NEON.  Non-free, C++.
    * [AvxToNeon](https://github.com/kunpengcompute/AvxToNeon) — Popular
       AVX+ intrinsincs implemented in NEON. C, Apache 2.0 license.
+   * [neon2rvv](https://github.com/howjmay/neon2rvv) - A C/C++ header file that converts Arm/Aarch64 NEON intrinsics to RISC-V Vector (RVV) Extension, MIT license
+   * [sse2rvv](https://github.com/pattonkan/sse2rvv) - A C/C++ header file that converts Intel SSE intrinsics to RISCV-V Extension intrinsics, MIT license.
  * [arm-neon-tests](https://github.com/christophe-lyon/arm-neon-tests)
    contains tests to verify NEON implementations.
 
