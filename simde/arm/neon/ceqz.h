@@ -44,7 +44,7 @@ simde_uint16x4_t
 simde_vceqz_f16(simde_float16x4_t a) {
   #if defined(SIMDE_ARM_NEON_A32V8_NATIVE) && defined(SIMDE_ARM_NEON_FP16)
     return vceqz_f16(a);
-  #elif defined(SIMDE_RISCV_V_NATIVE)
+  #elif defined(SIMDE_RISCV_V_NATIVE) && defined(SIMDE_ARCH_RISCV_ZVFH)
     simde_uint16x4_private r_;
     simde_float16x4_private a_ = simde_float16x4_to_private(a);
     vuint16m1_t vs_0 = __riscv_vmv_v_x_u16m1(UINT16_C(0), 4);
@@ -275,7 +275,7 @@ simde_uint16x8_t
 simde_vceqzq_f16(simde_float16x8_t a) {
   #if defined(SIMDE_ARM_NEON_A32V8_NATIVE) && defined(SIMDE_ARM_NEON_FP16)
     return vceqzq_f16(a);
-  #elif defined(SIMDE_RISCV_V_NATIVE)
+  #elif defined(SIMDE_RISCV_V_NATIVE) && defined(SIMDE_ARCH_RISCV_ZVFH)
     simde_uint16x8_private r_;
     simde_float16x8_private a_ = simde_float16x8_to_private(a);
     vuint16m1_t vs_0 = __riscv_vmv_v_x_u16m1(UINT16_C(0), 8);

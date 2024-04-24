@@ -116,7 +116,7 @@ simde_vceq_f16(simde_float16x4_t a, simde_float16x4_t b) {
       a_ = simde_float16x4_to_private(a),
       b_ = simde_float16x4_to_private(b);
 
-    #if defined(SIMDE_RISCV_V_NATIVE)
+    #if defined(SIMDE_RISCV_V_NATIVE) && defined(SIMDE_ARCH_RISCV_ZVFH)
       vuint16m1_t
         vs_0 = __riscv_vmv_v_x_u16m1(UINT16_C(0), 4);
       vbool16_t mask = __riscv_vmfeq_vv_f16m1_b16(a_.sv64, b_.sv64, 4);
@@ -483,7 +483,7 @@ simde_vceqq_f16(simde_float16x8_t a, simde_float16x8_t b) {
       a_ = simde_float16x8_to_private(a),
       b_ = simde_float16x8_to_private(b);
 
-    #if defined(SIMDE_RISCV_V_NATIVE)
+    #if defined(SIMDE_RISCV_V_NATIVE) && defined(SIMDE_ARCH_RISCV_ZVFH)
       vuint16m1_t
         vs_0 = __riscv_vmv_v_x_u16m1(UINT16_C(0), 8);
       vbool16_t mask = __riscv_vmfeq_vv_f16m1_b16(a_.sv128, b_.sv128, 8);
